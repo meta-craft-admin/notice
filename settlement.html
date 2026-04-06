@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>실비 정산 프로세스</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f5f4f0;
+  color: #2c2c2a;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+}
+.page {
+  width: 100%;
+  max-width: 680px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1.5px solid #e8e7e3;
+}
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.header p {
+  font-size: 13px;
+  color: #888780;
+}
+.section { margin-bottom: 1.75rem; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.section-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.num-1 { background: #E6F1FB; color: #0C447C; }
+.num-2 { background: #E1F5EE; color: #085041; }
+.num-3 { background: #FAEEDA; color: #633806; }
+.num-4 { background: #FBEAF0; color: #72243E; }
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c2c2a;
+}
+.card {
+  background: #fafaf8;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  border: 0.5px solid #e8e7e3;
+}
+.desc {
+  font-size: 13px;
+  color: #5f5e5a;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.desc strong { font-weight: 600; color: #2c2c2a; }
+.mail-grid {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 6px 12px;
+  font-size: 13px;
+}
+.mail-label { color: #888780; font-weight: 500; }
+.mail-value { color: #2c2c2a; font-weight: 500; }
+.mail-value a {
+  color: #185FA5;
+  text-decoration: none;
+  font-weight: 400;
+}
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: #fff;
+  border: 0.5px solid #d3d1c7;
+  color: #444441;
+}
+.tip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tip {
+  font-size: 13px;
+  color: #5f5e5a;
+  line-height: 1.5;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.tip::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #b4b2a9;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.table-card {
+  background: #fafaf8;
+  border-radius: 12px;
+  border: 0.5px solid #e8e7e3;
+  overflow: hidden;
+}
+.schedule-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.schedule-table thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #888780;
+  font-size: 12px;
+  border-bottom: 1px solid #e8e7e3;
+  background: #f0efeb;
+}
+.schedule-table thead th:first-child { border-radius: 12px 0 0 0; }
+.schedule-table thead th:last-child { border-radius: 0 12px 0 0; }
+.schedule-table tbody td {
+  padding: 12px 12px;
+  color: #2c2c2a;
+  border-bottom: 0.5px solid #e8e7e3;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+.schedule-table tbody tr:last-child td { border-bottom: none; }
+.date-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.pill-blue { background: #E6F1FB; color: #0C447C; }
+.pill-teal { background: #E1F5EE; color: #085041; }
+.pill-amber { background: #FAEEDA; color: #633806; }
+.exec-pill {
+  font-size: 12px;
+  font-weight: 500;
+  color: #5f5e5a;
+  background: #fff;
+  border: 0.5px solid #d3d1c7;
+  padding: 2px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.footnotes {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.footnote {
+  font-size: 12px;
+  color: #888780;
+  line-height: 1.5;
+  display: flex;
+  gap: 6px;
+}
+.footnote span { color: #b4b2a9; flex-shrink: 0; }
+.callout {
+  background: #fafaf8;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  border: 0.5px solid #e8e7e3;
+  border-left: 3px solid #D4537E;
+}
+.callout-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c2c2a;
+  margin-bottom: 8px;
+}
+.callout-body {
+  font-size: 13px;
+  color: #5f5e5a;
+  line-height: 1.7;
+}
+.callout-body strong { font-weight: 600; color: #2c2c2a; }
+.highlight-box {
+  margin-top: 12px;
+  background: #fff;
+  border: 0.5px solid #e8e7e3;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #5f5e5a;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.highlight-box strong { font-weight: 600; color: #2c2c2a; }
+.highlight-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FBEAF0;
+  color: #993556;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .page { box-shadow: none; border-radius: 0; padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>실비 정산 프로세스</h1>
+    <p>경비 정산 요청부터 집행까지의 전체 가이드</p>
+  </div>
+
+  <!-- 1. 정산 요청 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-1">1</div>
+      <div class="section-title">정산 요청</div>
+    </div>
+    <div class="card">
+      <div class="desc">이메일로 요청하며, 별도 양식은 없으나 <strong>사용 사유 및 내역을 반드시 기재</strong>합니다.</div>
+      <div class="mail-grid">
+        <div class="mail-label">수신</div>
+        <div class="mail-value">노국진 과장 &nbsp;<a href="mailto:nkj@novelpia.co.kr">nkj@novelpia.co.kr</a></div>
+        <div class="mail-label">참조</div>
+        <div class="mail-value">김경훈 본부장 &nbsp;<a href="mailto:khkim@novelpia.co.kr">khkim@novelpia.co.kr</a></div>
+        <div class="mail-label"></div>
+        <div class="mail-value">정한교 팀장 &nbsp;<a href="mailto:junghk0908@novelpia.co.kr">junghk0908@novelpia.co.kr</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 증빙 서류 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-2">2</div>
+      <div class="section-title">증빙 서류</div>
+    </div>
+    <div class="card">
+      <div class="badge-list">
+        <span class="badge">계약서</span>
+        <span class="badge">영수증</span>
+        <span class="badge">지출 내역</span>
+        <span class="badge">인보이스</span>
+      </div>
+      <div class="tip-list">
+        <div class="tip">인보이스는 항목별로 분리 발행</div>
+        <div class="tip">정산요청서에 반드시 첨부</div>
+        <div class="tip">집행 후 증빙이 발행되는 건은 해당 내용 기입</div>
+        <div class="tip">스캔 지향, 사진 촬영 시 구겨지거나 흐리지 않게 촬영</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 정산 일정 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-3">3</div>
+      <div class="section-title">정산 일정</div>
+    </div>
+    <div class="table-card">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th>요청일</th>
+            <th>구분</th>
+            <th>내용</th>
+            <th>집행</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="date-pill pill-blue">매달 5일</span></td>
+            <td>전월 발생분</td>
+            <td>전월 추가 발생분 요청</td>
+            <td><span class="exec-pill">15일</span></td>
+          </tr>
+          <tr>
+            <td><span class="date-pill pill-teal">매달 20일</span></td>
+            <td>당월 발생분</td>
+            <td>당월 사용한 사항 요청</td>
+            <td><span class="exec-pill">말일</span></td>
+          </tr>
+          <tr>
+            <td><span class="date-pill pill-amber">매달 20일</span></td>
+            <td>익월 발생분</td>
+            <td>선 지급 건 요청</td>
+            <td><span class="exec-pill">말일</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="footnotes">
+        <div class="footnote"><span>*</span> 집행일이 휴일인 경우 익일 지급</div>
+        <div class="footnote"><span>*</span> 금액이 50만 페소 이상인 경우 분리 송금으로 지연될 수 있음</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 수취/중계 수수료 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-4">4</div>
+      <div class="section-title">수취/중계 수수료</div>
+    </div>
+    <div class="callout">
+      <div class="callout-title">페소 입금 시 수수료 안내</div>
+      <div class="callout-body">
+        필리핀 은행과 국내 은행이 비제휴 관계로, 수취/중계 수수료는 <strong>당사에서 부담할 수 없는 구조</strong>입니다.<br><br>
+        실비는 <strong>실비 금액 그대로 입금</strong>되며, 수취/중계 수수료는 별도로 정산받으셔야 합니다.
+      </div>
+      <div class="highlight-box">
+        <div class="highlight-icon">!</div>
+        <div>
+          <strong>수수료 정산 방법</strong> — 차익월 5일 발생분과 함께 요청하거나, 분기별로 일괄 요청 가능합니다. 증빙 시 <strong>수취/중계 차감 내역을 필수 첨부</strong>해 주세요.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
